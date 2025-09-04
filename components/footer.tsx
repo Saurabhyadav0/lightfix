@@ -13,8 +13,7 @@ export function Footer() {
               <span className="font-bold text-xl text-foreground">LightFix</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Empowering citizens to create positive change in their communities through transparent civic issue
-              reporting and tracking.
+             Empowering citizens to make roads safer by reporting and tracking street light issues with full transparency
             </p>
           </div>
 
