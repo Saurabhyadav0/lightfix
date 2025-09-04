@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 
 :root {
-  --background: oklch(1 0 0);
+  --background: oklch(98.7% 0.007 87.2);
   --foreground: oklch(19.125% 0.00002 271.152);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -38,7 +38,7 @@
   --navbar: oklch(27.75% 0.052 266.77); /* Light mode navy blue (#0E2954) */
   --navbar-foreground: oklch(20.252% 0.00319 17.025); 
   --navbar-text: oklch(96.301% 0.00635 255.749);
-  --card: oklch(82.286% 0.13128 208.655);
+  --card: oklch(93.5% 0.027 211.3);
 }
 
 .dark {
