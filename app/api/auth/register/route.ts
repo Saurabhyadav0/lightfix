@@ -9,24 +9,43 @@ export async function POST(request: NextRequest) {
     await prisma.$connect()
     console.log("[v0] Database connection verified")
 
-    const { name, email, password } = await request.json()
+    const { name, email, password, mobile } = await request.json()
     console.log("[v0] Request data parsed successfully")
 
-    if (!name || !email || !password) {
-      return NextResponse.json({ message: "Name, email, and password are required" }, { status: 400 })
+    // Validation
+    if (!name || !email || !password || !mobile) {
+      return NextResponse.json(
+        { message: "Name, email, mobile, and password are required" },
+        { status: 400 }
+      )
     }
 
     if (password.length < 6) {
-      return NextResponse.json({ message: "Password must be at least 6 characters" }, { status: 400 })
+      return NextResponse.json(
+        { message: "Password must be at least 6 characters" },
+        { status: 400 }
+      )
     }
 
-    console.log("[v0] Checking for existing user")
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
+    if (!/^[0-9]{10}$/.test(mobile)) {
+      return NextResponse.json(
+        { message: "Mobile number must be 10 digits" },
+        { status: 400 }
+      )
+    }
+
+    console.log("[v0] Checking for existing user by email or mobile")
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [{ email }],
+      },
     })
 
     if (existingUser) {
-      return NextResponse.json({ message: "User already exists" }, { status: 400 })
+      return NextResponse.json(
+        { message: "User with this email or mobile already exists" },
+        { status: 400 }
+      )
     }
 
     console.log("[v0] Hashing password")
@@ -37,6 +56,7 @@ export async function POST(request: NextRequest) {
       data: {
         name,
         email,
+        mobile,
         password: hashedPassword,
       },
     })
@@ -44,11 +64,13 @@ export async function POST(request: NextRequest) {
     console.log("[v0] Generating token")
     const token = generateToken(String(user.id))
     console.log("[v0] Registration successful")
+
     const response = NextResponse.json({
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
+        mobile: user.mobile,
         role: user.role,
       },
     })
@@ -66,22 +88,15 @@ export async function POST(request: NextRequest) {
     console.error("[v0] Error stack:", error instanceof Error ? error.stack : "No stack trace")
 
     if (error instanceof Error && error.message.includes("connect")) {
-      console.error("[v0] Database connection error - check DATABASE_URL")
       return NextResponse.json(
         { message: "Database connection failed", details: "Please check DATABASE_URL environment variable" },
-        {
-          status: 500,
-          headers: { "Content-Type": "application/json" },
-        },
+        { status: 500 }
       )
     }
 
     return NextResponse.json(
       { message: "Internal server error", details: error instanceof Error ? error.message : "Unknown error" },
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      },
+      { status: 500 }
     )
   }
 }

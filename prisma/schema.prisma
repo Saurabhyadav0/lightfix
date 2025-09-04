@@ -16,6 +16,7 @@ model User {
   complaints Complaint[]
   createdAt DateTime   @default(now())
   coins      Int         @default(0) 
+  mobile     String      @unique  
 }
 
 model Complaint {

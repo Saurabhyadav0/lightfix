@@ -9,6 +9,7 @@ interface User {
   email: string
   role: "CITIZEN" | "ADMIN"
   coins: number  
+  mobile?: string
 }
 
 export function useAuth() {
@@ -51,38 +52,44 @@ export function useAuth() {
     }
   }
 
-  const register = async (name: string, email: string, password: string) => {
-    try {
-      console.log("[v0] Starting registration request")
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      })
+ const register = async (
+  name: string,
+  email: string,
+  password: string,
+  mobile: string // 👈 added here
+) => {
+  try {
+    console.log("[v0] Starting registration request")
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password, mobile }), // 👈 send mobile too
+    })
 
-      console.log("[v0] Registration response status:", response.status)
-      console.log("[v0] Registration response headers:", response.headers.get("content-type"))
+    console.log("[v0] Registration response status:", response.status)
+    console.log("[v0] Registration response headers:", response.headers.get("content-type"))
 
-      if (response.ok) {
-        const userData = await response.json()
-        setUser(userData.user)
-        return { success: true }
+    if (response.ok) {
+      const userData = await response.json()
+      setUser(userData.user)
+      return { success: true }
+    } else {
+      const contentType = response.headers.get("content-type")
+      if (contentType && contentType.includes("application/json")) {
+        const error = await response.json()
+        return { success: false, error: error.message }
       } else {
-        const contentType = response.headers.get("content-type")
-        if (contentType && contentType.includes("application/json")) {
-          const error = await response.json()
-          return { success: false, error: error.message }
-        } else {
-          const errorText = await response.text()
-          console.log("[v0] Non-JSON error response:", errorText)
-          return { success: false, error: "Registration failed. Please try again." }
-        }
+        const errorText = await response.text()
+        console.log("[v0] Non-JSON error response:", errorText)
+        return { success: false, error: "Registration failed. Please try again." }
       }
-    } catch (error) {
-      console.error("[v0] Registration error:", error)
-      return { success: false, error: "Network error. Please check your connection and try again." }
     }
+  } catch (error) {
+    console.error("[v0] Registration error:", error)
+    return { success: false, error: "Network error. Please check your connection and try again." }
   }
+}
+
 
   const logout = async () => {
     await fetch("/api/auth/logout", { method: "POST" })
