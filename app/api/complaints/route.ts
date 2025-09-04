@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
       message: "Complaint created successfully",
       complaint,
       user: updatedUser,
-      reward: updatedUser.coins , // optional - tells frontend how many coins earned
+      reward: updatedUser.coins, // optional - tells frontend how many coins earned
     })
   } catch (error) {
     console.error("Create complaint error:", error)
@@ -105,6 +105,7 @@ export async function GET(request: NextRequest) {
             select: {
               name: true,
               email: true,
+              mobile: true,
             },
           },
         },
@@ -123,6 +124,7 @@ export async function GET(request: NextRequest) {
             select: {
               name: true,
               email: true,
+              mobile: true,
             },
           },
         },

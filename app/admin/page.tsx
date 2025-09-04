@@ -53,6 +53,7 @@ interface Complaint {
   citizen: {
     name: string;
     email: string;
+    mobile?: string;
   };
 }
 
@@ -404,7 +405,7 @@ export default function AdminPage() {
                             {complaint.location && (
                               <div className="text-xs text-blue-600 underline mt-1">
                                 <Link
-                                target="blank"
+                                  target="blank"
                                   href={`/map?lat=${
                                     complaint.location.split(",")[0]
                                   }&lng=${complaint.location.split(",")[1]}`}
@@ -420,11 +421,17 @@ export default function AdminPage() {
                             <div className="font-medium">
                               {complaint.citizen.name}
                             </div>
-                            <div className="text-muted-foreground">
-                              {complaint.citizen.email}
-                            </div>
+                            {complaint.citizen.mobile && (
+                              <a
+                                href={`tel:${complaint.citizen.mobile}`}
+                                className="text-blue-600 underline text-sm"
+                              >
+                                {complaint.citizen.mobile}
+                              </a>
+                            )}
                           </div>
                         </TableCell>
+
                         <TableCell>
                           <Badge
                             variant="outline"
