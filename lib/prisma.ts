@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 
+// Extend globalThis type so TS knows about prisma instance
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
@@ -7,7 +8,10 @@ const globalForPrisma = globalThis as unknown as {
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log: ["query", "info", "warn", "error"],
+    log:
+      process.env.NODE_ENV === "development"
+        ? ["query", "error", "warn"]
+        : ["error"], // only log errors in prod
     datasources: {
       db: {
         url: process.env.DATABASE_URL,
@@ -15,13 +19,19 @@ export const prisma =
     },
   })
 
-prisma
-  .$connect()
-  .then(() => {
-    console.log("[v0] Database connected successfully")
-  })
-  .catch((error) => {
-    console.error("[v0] Database connection failed:", error)
-  })
+// Ensure only 1 PrismaClient instance in dev
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma
+}
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
+// Optional: Test connection on startup (logs once)
+if (process.env.NODE_ENV === "development") {
+  prisma
+    .$connect()
+    .then(() => {
+      console.log("[DB] Connected successfully")
+    })
+    .catch((err) => {
+      console.error("[DB] Connection failed:", err)
+    })
+}
