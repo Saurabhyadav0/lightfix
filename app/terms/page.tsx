@@ -1,38 +1,38 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "CityPlus - Terms & Conditions",
+  title: "LightFix - Terms & Conditions",
   description:
-    "Read the official Terms & Conditions of CityPlus. Learn about your rights, responsibilities, privacy, and rules for reporting and tracking civic issues through our platform.",
+    "Read the official Terms & Conditions of LightFix. Learn about your rights, responsibilities, privacy, and rules for reporting and tracking traffic light issues through our platform.",
   keywords: [
-    "CityPlus",
+    "LightFix",
     "Terms and Conditions",
     "Privacy Policy",
-    "Civic Issues",
-    "Community Reporting",
+    "Traffic Light Issues",
+    "Signal Repair",
     "Smart City App",
-    "Citizen Engagement",
+    "Road Safety",
   ],
-  authors: [{ name: "CityPlus Team", url: "https://cityplus.me" }],
-  creator: "CityPlus",
-  publisher: "CityPlus",
+  authors: [{ name: "LightFix Team", url: "https://lightfix.me" }],
+  creator: "LightFix",
+  publisher: "LightFix",
   robots: "index, follow", // allow search engines
 
   // Open Graph (for Facebook, LinkedIn, WhatsApp)
   openGraph: {
-    title: "CityPlus - Terms & Conditions",
+    title: "LightFix - Terms & Conditions",
     description:
-      "Understand the terms of using CityPlus for reporting civic issues, tracking complaints, and improving your community.",
-    url: "https://cityplus.me/terms",
-    siteName: "CityPlus",
+      "Understand the terms of using LightFix for reporting traffic light issues, tracking complaints, and improving road safety.",
+    url: "https://lightfix.me/terms",
+    siteName: "LightFix",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "https://cityplus.me/og-image.png", // replace with your image
+        url: "https://lightfix.me/og-image.png", // replace with your image
         width: 1200,
         height: 630,
-        alt: "CityPlus - Building Better Communities",
+        alt: "LightFix - Safer Roads with Better Signals",
       },
     ],
   },
@@ -40,11 +40,11 @@ export const metadata: Metadata = {
   // Twitter Card (for Twitter/X)
   twitter: {
     card: "summary_large_image",
-    title: "CityPlus - Terms & Conditions",
+    title: "LightFix - Terms & Conditions",
     description:
-      "Read the rules and policies of CityPlus to ensure safe and transparent civic issue reporting.",
-    images: ["https://cityplus.me/og-image.png"], // replace with your image
-    creator: "@cityplus",
+      "Read the rules and policies of LightFix to ensure safe and transparent traffic light issue reporting.",
+    images: ["https://lightfix.me/og-image.png"], // replace with your image
+    creator: "@lightfix",
   },
 
   // Favicon and icons
@@ -55,8 +55,8 @@ export const metadata: Metadata = {
   },
 
   // Additional meta
-  category: "Civic Tech",
-  applicationName: "CityPlus",
+  category: "Traffic Tech",
+  applicationName: "LightFix",
 }
 
 export default function TermsPage() {
@@ -64,7 +64,10 @@ export default function TermsPage() {
     <div className="max-w-4xl mx-auto p-8">
       <h1 className="text-3xl font-bold mb-6">Terms & Conditions</h1>
       <p className="text-muted-foreground leading-relaxed">
-        Here goes your detailed terms and conditions content...
+        These Terms & Conditions govern your use of <strong>LightFix</strong>. By using our
+        platform, you agree to follow these rules while reporting and tracking traffic light
+        problems. Please read them carefully to understand your rights, responsibilities, and our
+        policies regarding the safe use of LightFix.
       </p>
     </div>
   )

@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { Shield, Trash2, Construction, LightbulbOff, Droplets, CheckCircle, Clock, FileText } from "lucide-react"
+import { Zap, Activity, AlertTriangle,Gift } from "lucide-react";
 
 export default function HomePage() {
   return (
@@ -21,9 +22,7 @@ export default function HomePage() {
               Empowering Citizens to Create Change
             </h1>
             <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto text-pretty">
-              Report civic issues in your community and track their progress from submission to resolution. Together, we
-              can build better cities for everyone.
-            </p>
+            Report traffic light issues in your area and track their status from complaint to repair. Together, we can make our roads safer and smoother.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/report">
                 <Button size="lg" className="text-lg px-8 py-3">
@@ -46,51 +45,52 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">Common Issues We Help Solve</h2>
             <p className="text-muted-foreground text-lg">
-              From potholes to broken streetlights, we help you report and track all types of civic issues
+              Keep your roads safe and smooth—report traffic light problems and track repairs in real time
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="text-center hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <Trash2 className="h-12 w-12 text-primary mx-auto mb-4" />
-                <CardTitle>Garbage & Waste</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>Overflowing bins, illegal dumping, and waste management issues</CardDescription>
-              </CardContent>
-            </Card>
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <Card className="text-center hover:shadow-lg transition-shadow">
+    <CardHeader>
+      <Zap className="h-12 w-12 text-primary mx-auto mb-4" />
+      <CardTitle>Short Circuit</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <CardDescription>Fixing dangerous electrical short circuits in traffic light systems</CardDescription>
+    </CardContent>
+  </Card>
 
-            <Card className="text-center hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <Construction className="h-12 w-12 text-primary mx-auto mb-4" />
-                <CardTitle>Road Issues</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>Potholes, damaged sidewalks, and street maintenance problems</CardDescription>
-              </CardContent>
-            </Card>
+  <Card className="text-center hover:shadow-lg transition-shadow">
+    <CardHeader>
+      <Activity className="h-12 w-12 text-primary mx-auto mb-4" />
+      <CardTitle>Voltage Surge</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <CardDescription> Handling sudden power surges that disrupt traffic light systems</CardDescription>
+    </CardContent>
+  </Card>
 
-            <Card className="text-center hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <LightbulbOff className="h-12 w-12 text-primary mx-auto mb-4" />
-                <CardTitle>Street Lighting</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>Broken streetlights, dark areas, and electrical issues</CardDescription>
-              </CardContent>
-            </Card>
+  <Card className="text-center hover:shadow-lg transition-shadow">
+    <CardHeader>
+      <LightbulbOff className="h-12 w-12 text-primary mx-auto mb-4" />
+      <CardTitle>Bulb Failure</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <CardDescription>Replacing faulty or burnt-out bulbs to restore proper traffic signal visibility  </CardDescription>
+    </CardContent>
+  </Card>
 
-            <Card className="text-center hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <Droplets className="h-12 w-12 text-primary mx-auto mb-4" />
-                <CardTitle>Water Issues</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>Leaks, flooding, drainage problems, and water quality concerns</CardDescription>
-              </CardContent>
-            </Card>
-          </div>
+  <Card className="text-center hover:shadow-lg transition-shadow">
+    <CardHeader>
+      <AlertTriangle className="h-12 w-12 text-primary mx-auto mb-4" />
+      <CardTitle>Light Flickering</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <CardDescription>Replacing faulty or burnt-out bulbs to restore proper traffic signal visibility  </CardDescription>
+    </CardContent>
+  </Card>
+</div>
+
         </div>
       </section>
 
@@ -100,7 +100,7 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">How LightFix Works</h2>
             <p className="text-muted-foreground text-lg">
-              Simple, transparent, and effective civic issue reporting in three easy steps
+              Simple, transparent, and effective traffic light repair reporting in four easy steps.
             </p>
           </div>
 
@@ -137,6 +137,18 @@ export default function HomePage() {
                 civic engagement.
               </p>
             </div>
+
+            <div className="text-center">
+    <div className="bg-primary/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-6">
+      <Gift className="h-8 w-8 text-primary" />
+    </div>
+    <h3 className="text-xl font-semibold text-foreground mb-4">4. Rewards</h3>
+    <p className="text-muted-foreground">
+      Earn reward points for every valid complaint you submit. Contribute actively and get recognized for
+      making roads safer and brighter.
+    </p>
+  </div>
+
           </div>
         </div>
       </section>
