@@ -366,14 +366,17 @@ export default function AdminPage() {
           </Card>
         ) : (
           <Card>
-            <CardHeader>
-              <CardTitle>All Reports ({filteredComplaints.length})</CardTitle>
-              <CardDescription>
-                Manage status and department assignments for civic issues
-              </CardDescription>
+            <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+              <div>
+                <CardTitle>All Reports ({filteredComplaints.length})</CardTitle>
+                <CardDescription>
+                  Manage status and department assignments for civic issues
+                </CardDescription>
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
+              {/* Desktop Table */}
+              <div className="hidden md:block overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -401,7 +404,6 @@ export default function AdminPage() {
                                   )}...`
                                 : complaint.description}
                             </div>
-
                             {complaint.location && (
                               <div className="text-xs text-blue-600 underline mt-1">
                                 <Link
@@ -431,7 +433,6 @@ export default function AdminPage() {
                             )}
                           </div>
                         </TableCell>
-
                         <TableCell>
                           <Badge
                             variant="outline"
@@ -480,6 +481,81 @@ export default function AdminPage() {
                     ))}
                   </TableBody>
                 </Table>
+              </div>
+
+              {/* Mobile Cards */}
+              <div className="grid gap-4 md:hidden">
+                {filteredComplaints.map((complaint) => (
+                  <Card key={complaint.id} className="p-4">
+                    <div className="font-medium text-foreground">
+                      {complaint.title}
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      {complaint.description.length > 80
+                        ? `${complaint.description.substring(0, 80)}...`
+                        : complaint.description}
+                    </p>
+                    {complaint.location && (
+                      <div className="text-xs text-blue-600 underline mb-2">
+                        <Link
+                          target="blank"
+                          href={`/map?lat=${
+                            complaint.location.split(",")[0]
+                          }&lng=${complaint.location.split(",")[1]}`}
+                        >
+                          {complaint.location}
+                        </Link>
+                      </div>
+                    )}
+                    <div className="text-sm mb-2">
+                      👤 {complaint.citizen.name}{" "}
+                      {complaint.citizen.mobile && (
+                        <a
+                          href={`tel:${complaint.citizen.mobile}`}
+                          className="text-blue-600 underline ml-2"
+                        >
+                          {complaint.citizen.mobile}
+                        </a>
+                      )}
+                    </div>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      <Badge
+                        variant="outline"
+                        className={getCategoryColor(complaint.category)}
+                      >
+                        {complaint.category}
+                      </Badge>
+                      <Select
+                        value={complaint.status}
+                        onValueChange={(value) =>
+                          updateComplaint(complaint.id, { status: value })
+                        }
+                        disabled={updatingIds.has(complaint.id)}
+                      >
+                        <SelectTrigger className="w-28 h-8 text-xs">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="RECEIVED">Received</SelectItem>
+                          <SelectItem value="IN_PROGRESS">
+                            In Progress
+                          </SelectItem>
+                          <SelectItem value="RESOLVED">Resolved</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <DepartmentDropdown
+                        value={complaint.assignedTo ?? null}
+                        onValueChange={(value) =>
+                          updateComplaint(complaint.id, { assignedTo: value })
+                        }
+                        disabled={updatingIds.has(complaint.id)}
+                      />
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-2">
+                      {formatDate(complaint.createdAt)}
+                    </div>
+                  </Card>
+                ))}
               </div>
             </CardContent>
           </Card>
