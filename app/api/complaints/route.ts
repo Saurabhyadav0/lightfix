@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { verifyToken } from "@/lib/auth"
 import { categorizeComplaint } from "@/lib/categories"
-import { generatePriorityScore } from "@/lib/ai-priority"
+import { generateStreetlightPriority } from "@/lib/ai-priority"
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     // ⭐ AI-based priority score
     let priority = 1
     try {
-      priority = await generatePriorityScore(title, description, photoUrl)
+      priority = await generateStreetlightPriority(title, description, photoUrl)
       console.log("🎯 Final priority from AI:", priority)
     } catch (err) {
       console.warn("AI priority generation failed, using default = 1", err)
