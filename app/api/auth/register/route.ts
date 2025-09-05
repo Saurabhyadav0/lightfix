@@ -1,3 +1,4 @@
+// app/api/auth/register/route.ts
 import { type NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { hashPassword, generateToken } from "@/lib/auth"
@@ -6,9 +7,11 @@ export async function POST(request: NextRequest) {
   try {
     console.log("[v0] Registration request received")
 
+    // Ensure database is connected
     await prisma.$connect()
     console.log("[v0] Database connection verified")
 
+    // Parse request
     const { name, email, password, mobile } = await request.json()
     console.log("[v0] Request data parsed successfully")
 
@@ -34,11 +37,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log("[v0] Checking for existing user by email or mobile")
+    // Check if user already exists
     const existingUser = await prisma.user.findFirst({
-      where: {
-        OR: [{ email }],
-      },
+      where: { OR: [{ email }, { mobile }] },
     })
 
     if (existingUser) {
@@ -48,23 +49,21 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log("[v0] Hashing password")
+    // Hash password
     const hashedPassword = await hashPassword(password)
+    console.log("[v0] Password hashed")
 
-    console.log("[v0] Creating user in database")
+    // Create user
     const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        mobile,
-        password: hashedPassword,
-      },
+      data: { name, email, mobile, password: hashedPassword },
     })
+    console.log("[v0] User created")
 
-    console.log("[v0] Generating token")
+    // Generate JWT token
     const token = generateToken(String(user.id))
-    console.log("[v0] Registration successful")
+    console.log("[v0] Token generated")
 
+    // Send response with cookie
     const response = NextResponse.json({
       user: {
         id: user.id,
@@ -84,18 +83,9 @@ export async function POST(request: NextRequest) {
 
     return response
   } catch (error) {
-    console.error("[v0] Registration error details:", error)
-    console.error("[v0] Error stack:", error instanceof Error ? error.stack : "No stack trace")
-
-    if (error instanceof Error && error.message.includes("connect")) {
-      return NextResponse.json(
-        { message: "Database connection failed", details: "Please check DATABASE_URL environment variable" },
-        { status: 500 }
-      )
-    }
-
+    console.error("[v0] Registration error:", error)
     return NextResponse.json(
-      { message: "Internal server error", details: error instanceof Error ? error.message : "Unknown error" },
+      { message: "Internal server error", details: error instanceof Error ? error.message : "Unknown" },
       { status: 500 }
     )
   }
