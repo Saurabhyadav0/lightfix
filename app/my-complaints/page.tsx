@@ -26,6 +26,7 @@ interface Complaint {
     name: string
     email: string
   }
+  priority: string
 }
 
 export default function MyComplaintsPage() {

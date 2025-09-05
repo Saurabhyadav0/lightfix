@@ -13,6 +13,7 @@ interface ComplaintCardProps {
     location?: string
     photoUrl?: string
     createdAt: string
+    priority: string
     citizen: {
       name: string
       email: string

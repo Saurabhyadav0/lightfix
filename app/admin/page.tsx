@@ -50,6 +50,7 @@ interface Complaint {
   photoUrl?: string;
   assignedTo?: string;
   createdAt: string;
+  priority: string;
   citizen: {
     name: string;
     email: string;
@@ -384,7 +385,7 @@ export default function AdminPage() {
                       <TableHead>Citizen</TableHead>
                       <TableHead>Category</TableHead>
                       <TableHead>Status</TableHead>
-                      {/* <TableHead>Department</TableHead> */}
+                      <TableHead>Priority</TableHead>
                       <TableHead>Date</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -461,19 +462,23 @@ export default function AdminPage() {
                             </SelectContent>
                           </Select>
                         </TableCell>
-                        {/* <TableCell>
-                          <div className="w-40">
-                            <DepartmentDropdown
-                              value={complaint.assignedTo ?? null}
-                              onValueChange={(value) =>
-                                updateComplaint(complaint.id, {
-                                  assignedTo: value,
-                                })
-                              }
-                              disabled={updatingIds.has(complaint.id)}
-                            />
-                          </div>
-                        </TableCell> */}
+                        <TableCell>
+                          <span
+                            className={`
+      px-2 py-1 rounded-full text-xs font-medium
+      ${
+        complaint.priority === "HIGH"
+          ? "bg-red-100 text-red-600"
+          : complaint.priority === "MODERATE"
+          ? "bg-yellow-100 text-yellow-600"
+          : "bg-green-100 text-green-600"
+      }
+    `}
+                          >
+                            {complaint.priority}
+                          </span>
+                        </TableCell>
+
                         <TableCell className="text-sm text-muted-foreground">
                           {formatDate(complaint.createdAt)}
                         </TableCell>

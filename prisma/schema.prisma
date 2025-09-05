@@ -33,7 +33,7 @@ model Complaint {
   citizen     User     @relation(fields: [citizenId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  priority   Int @default(1)
+  priority    String   // <--- change from Int to String
 }
 
 enum Role {

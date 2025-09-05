@@ -4,6 +4,13 @@ import { verifyToken } from "@/lib/auth"
 import { categorizeComplaint } from "@/lib/categories"
 import { generateStreetlightPriority } from "@/lib/ai-priority"
 
+
+const mapPriorityScore = (score: number): "HIGH" | "MODERATE" | "LOW" => {
+  if (score >= 8) return "HIGH";
+  if (score >= 4) return "MODERATE";
+  return "LOW";
+};
+
 export async function POST(request: NextRequest) {
   try {
     const token = request.cookies.get("auth-token")?.value
@@ -24,16 +31,19 @@ export async function POST(request: NextRequest) {
     }
 
     // Use frontend category if provided; otherwise, fall back to AI-based categorization
-    const category = frontendCategory ;
+    const category = frontendCategory;
 
     // ⭐ AI-based priority score
-    let priority = 1
+    let numericPriority = 3;
     try {
-      priority = await generateStreetlightPriority(title, description, photoUrl)
-      console.log("🎯 Final priority from AI:", priority)
+      numericPriority = await generateStreetlightPriority(title, description, photoUrl);
+      console.log("🎯 AI numeric priority:", numericPriority);
     } catch (err) {
-      console.warn("AI priority generation failed, using default = 1", err)
+      console.warn("AI priority generation failed, using default = 3", err);
     }
+
+    // Convert numeric to string
+    const priority = mapPriorityScore(numericPriority);
 
     // 1️⃣ Create complaint
     const complaint = await prisma.complaint.create({
@@ -44,7 +54,7 @@ export async function POST(request: NextRequest) {
         photoUrl,
         category, // now respects frontend dropdown
         citizenId: Number(payload.userId),
-        priority,
+        priority: priority,  // Store as number
       },
     })
 
@@ -77,26 +87,26 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const token = request.cookies.get("auth-token")?.value
+    const token = request.cookies.get("auth-token")?.value;
 
     if (!token) {
-      return NextResponse.json({ message: "Authentication required" }, { status: 401 })
+      return NextResponse.json({ message: "Authentication required" }, { status: 401 });
     }
 
-    const payload = verifyToken(token)
+    const payload = verifyToken(token);
     if (!payload) {
-      return NextResponse.json({ message: "Invalid token" }, { status: 401 })
+      return NextResponse.json({ message: "Invalid token" }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
       where: { id: Number(payload.userId) },
-    })
+    });
 
     if (!user) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 })
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    let complaints
+    let complaints;
 
     if (user.role === "ADMIN") {
       // Admin can see all complaints
@@ -111,9 +121,13 @@ export async function GET(request: NextRequest) {
           },
         },
         orderBy: {
-          priority: "desc", // ⭐ highest priority first
+          createdAt: "desc", // fetch newest first, we will sort by priority next
         },
-      })
+      });
+
+      // Sort by priority: HIGH > MODERATE > LOW
+      const priorityOrder: Record<string, number> = { HIGH: 3, MODERATE: 2, LOW: 1 };
+      complaints.sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]);
     } else {
       // Citizens can only see their own complaints
       complaints = await prisma.complaint.findMany({
@@ -132,12 +146,13 @@ export async function GET(request: NextRequest) {
         orderBy: {
           createdAt: "desc",
         },
-      })
+      });
     }
 
-    return NextResponse.json(complaints)
+    return NextResponse.json(complaints);
   } catch (error) {
-    console.error("Get complaints error:", error)
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+    console.error("Get complaints error:", error);
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }
+
