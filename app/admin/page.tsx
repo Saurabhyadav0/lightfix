@@ -384,7 +384,7 @@ export default function AdminPage() {
                       <TableHead>Citizen</TableHead>
                       <TableHead>Category</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead>Department</TableHead>
+                      {/* <TableHead>Department</TableHead> */}
                       <TableHead>Date</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -461,7 +461,7 @@ export default function AdminPage() {
                             </SelectContent>
                           </Select>
                         </TableCell>
-                        <TableCell>
+                        {/* <TableCell>
                           <div className="w-40">
                             <DepartmentDropdown
                               value={complaint.assignedTo ?? null}
@@ -473,7 +473,7 @@ export default function AdminPage() {
                               disabled={updatingIds.has(complaint.id)}
                             />
                           </div>
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell className="text-sm text-muted-foreground">
                           {formatDate(complaint.createdAt)}
                         </TableCell>
@@ -543,13 +543,13 @@ export default function AdminPage() {
                           <SelectItem value="RESOLVED">Resolved</SelectItem>
                         </SelectContent>
                       </Select>
-                      <DepartmentDropdown
+                      {/* <DepartmentDropdown
                         value={complaint.assignedTo ?? null}
                         onValueChange={(value) =>
                           updateComplaint(complaint.id, { assignedTo: value })
                         }
                         disabled={updatingIds.has(complaint.id)}
-                      />
+                      /> */}
                     </div>
                     <div className="text-xs text-muted-foreground mt-2">
                       {formatDate(complaint.createdAt)}

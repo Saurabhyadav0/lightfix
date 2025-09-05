@@ -133,7 +133,7 @@ export default function MyComplaintsPage() {
               <FileText className="h-8 w-8 text-primary" />
               My Reports
             </h1>
-            <p className="text-muted-foreground mt-2">Track the status of your civic issue reports</p>
+            <p className="text-muted-foreground mt-2">Track the status of your street light reports</p>
           </div>
           <Link href="/report">
             <Button className="flex items-center gap-2">

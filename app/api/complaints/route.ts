@@ -17,13 +17,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Invalid token" }, { status: 401 })
     }
 
-    const { title, description, location, photoUrl } = await request.json()
+    const { title, description, location, photoUrl, category: frontendCategory } = await request.json()
 
     if (!title || !description) {
       return NextResponse.json({ message: "Title and description are required" }, { status: 400 })
     }
 
-    const category = categorizeComplaint(title, description)
+    // Use frontend category if provided; otherwise, fall back to AI-based categorization
+    const category = frontendCategory ;
 
     // ⭐ AI-based priority score
     let priority = 1
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
         description,
         location,
         photoUrl,
-        category,
+        category, // now respects frontend dropdown
         citizenId: Number(payload.userId),
         priority,
       },
@@ -64,7 +65,7 @@ export async function POST(request: NextRequest) {
       message: "Complaint created successfully",
       complaint,
       user: updatedUser,
-      reward: updatedUser.coins, // optional - tells frontend how many coins earned
+      reward: updatedUser.coins,
     })
   } catch (error) {
     console.error("Create complaint error:", error)

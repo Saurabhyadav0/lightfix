@@ -26,13 +26,13 @@ import { CoinReward } from "@/components/CoinReward";
 export default function ReportPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState(""); // NEW: category state
   const [location, setLocation] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
   const router = useRouter();
-
   const [coinAnim, setCoinAnim] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -48,12 +48,20 @@ export default function ReportPage() {
       return;
     }
 
+    if (!category) {
+      toast({
+        title: "Category Required",
+        description: "Please select an issue category",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
       let photoUrl = null;
 
-      // Upload photo if selected
       if (selectedFile) {
         const formData = new FormData();
         formData.append("file", selectedFile);
@@ -69,13 +77,13 @@ export default function ReportPage() {
         }
       }
 
-      // Create complaint
       const response = await fetch("/api/complaints", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
           description,
+          category, // include category
           location,
           photoUrl,
         }),
@@ -84,14 +92,11 @@ export default function ReportPage() {
       const data = await response.json();
 
       if (response.ok) {
-        // ✅ trigger toast + animation with coin balance
         toast({
           title: "Issue Reported Successfully",
           description: `You earned +5 coins 🎉 (Total: ${data?.user?.coins ?? "?"})`,
         });
         setCoinAnim(true);
-
-        // Delay redirect so animation plays first
         setTimeout(() => router.push("/my-complaints"), 2500);
       } else {
         toast({
@@ -163,6 +168,28 @@ export default function ReportPage() {
                 />
               </div>
 
+              {/* category */}
+              <div className="space-y-2">
+                <Label id="category-label" htmlFor="category">Category *</Label>
+                <select
+                  id="category"
+                  aria-labelledby="category-label"
+                  aria-label="Category"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  required
+                >
+                  <option value="">Select category</option>
+                  <option value="Broken Pole">Broken Pole</option>
+                  <option value="Broken Wire">Broken Wire</option>
+                  <option value="Flickering">Flickering</option>
+                  <option value="Pole Fire">Pole Fire</option>
+                  <option value="Not Working">Not Working</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
               {/* location */}
               <div className="space-y-2">
                 <Label htmlFor="location">
@@ -171,9 +198,7 @@ export default function ReportPage() {
                 </Label>
                 <LocationPicker
                   location={location}
-                  onSelect={(address, lat, lng) => {
-                    setLocation(address);
-                  }}
+                  onSelect={(address) => setLocation(address)}
                 />
               </div>
 
@@ -210,7 +235,6 @@ export default function ReportPage() {
 
       <Footer />
 
-      {/* 🎥 Coin Animation */}
       <CoinReward visible={coinAnim} />
     </div>
   );
