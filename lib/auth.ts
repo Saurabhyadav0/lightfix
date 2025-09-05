@@ -1,5 +1,7 @@
 import bcrypt from "bcryptjs"
 
+export const runtime = "nodejs"
+
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key"
 
 type Role = "CITIZEN" | "ADMIN"
